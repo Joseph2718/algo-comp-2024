@@ -6,6 +6,115 @@ from math import sqrt
 
 INPUT_FILE = 'testdata.json' # Constant variables are usually in ALL CAPS
 
+users_data_json = '''
+{
+  "users": [
+    {
+      "name": "Alex",
+      "gradYear": 2024,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [1, 1, 2, 0, 3, 2, 1, 4, 2, 4, 1, 1, 0, 3, 4, 1, 2, 1, 4, 4]
+    },
+    {
+      "name": "Anurag",
+      "gradYear": 2023,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [1, 3, 2, 0, 3, 3, 2, 2, 2, 4, 0, 3, 1, 1, 0, 0, 1, 4, 4, 3]
+    },
+    {
+      "name": "Ashley",
+      "gradYear": 2023,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [0, 0, 3, 0, 0, 3, 4, 0, 0, 4, 3, 4, 2, 1, 0, 0, 0, 2, 2, 0]
+    },
+    {
+      "name": "Chelsea",
+      "gradYear": 2024,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [3, 3, 3, 2, 1, 2, 1, 3, 1, 3, 3, 4, 4, 3, 1, 2, 2, 0, 2, 2]
+    },
+    {
+      "name": "Chiara",
+      "gradYear": 2022,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [3, 2, 1, 2, 3, 1, 4, 3, 2, 1, 2, 0, 0, 2, 3, 4, 1, 4, 1, 1]
+    },
+    {
+      "name": "Jeremy",
+      "gradYear": 2024,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [4, 4, 3, 0, 4, 5, 1, 5, 0, 3, 3, 1, 4, 2, 5, 4, 1, 2, 4, 4]
+    },
+    {
+      "name": "Kat",
+      "gradYear": 2023,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [2, 4, 3, 4, 3, 3, 2, 4, 4, 0, 3, 1, 0, 3, 0, 4, 4, 1, 4, 2]
+    },
+    {
+      "name": "Katherine",
+      "gradYear": 2023,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [3, 4, 4, 2, 0, 1, 0, 1, 1, 1, 3, 2, 1, 4, 0, 1, 1, 1, 2, 3]
+    },
+    {
+      "name": "Leonard",
+      "gradYear": 2024,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [0, 3, 0, 1, 5, 0, 3, 1, 1, 2, 0, 1, 0, 1, 3, 4, 2, 2, 4, 0]
+    },
+    {
+      "name": "Melissa",
+      "gradYear": 2022,
+      "gender": "F",
+      "preferences": ["M"],
+      "responses": [0, 3, 3, 3, 0, 3, 4, 4, 2, 2, 3, 4, 2, 2, 0, 2, 0, 5, 0, 0]
+    },
+    {
+      "name": "Quan",
+      "gradYear": 2023,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [0, 2, 2, 0, 2, 4, 4, 4, 1, 0, 3, 1, 1, 1, 1, 1, 0, 1, 3, 2]
+    },
+    {
+      "name": "Tarun",
+      "gradYear": 2023,
+      "gender": "M",
+      "preferences": ["F"],
+      "responses": [1, 1, 4, 2, 4, 2, 3, 2, 3, 2, 4, 1, 1, 2, 2, 4, 3, 2, 1, 1]
+    }
+  ]
+}
+'''
+
+users_data = json.loads(users_data_json)
+question_distribution = [{'0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 0} for _ in range(20)]
+
+for user in users_data['users']:
+    responses = user['responses']
+    for question_index, response in enumerate(responses):
+
+        response_key = str(response)
+        if response_key in question_distribution[question_index]:
+            question_distribution[question_index][response_key] += 1
+
+formatted_distribution = []
+for question_index, counts in enumerate(question_distribution):
+    formatted_distribution.append({
+        'question': question_index + 1, 
+        'counts': counts
+    })
+
 class User:
     def __init__(self, name, gender, preferences, grad_year, responses):
         self.name = name
@@ -15,7 +124,6 @@ class User:
         self.responses = responses
 
 def cosine_similarity(v1, v2):
-    # Stack overflow inspired, but improved
     sum_xx, sum_xy, sum_yy = 0, 0, 0
     for i in range(len(v1)):
         x, y = v1[i], v2[i]
@@ -29,8 +137,6 @@ def cosine_similarity(v1, v2):
         return sum_xy / denominator
 
 def compare_responses(response1, response2, question_distribution):
-    # Note that we construct question_distribution from the frequency of
-    # responses in testdata.json (some time constraints)
     total_same = 0
     weighted_score = 0.0
     for i in range(len(response1)):
