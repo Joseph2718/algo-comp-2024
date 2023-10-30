@@ -29,6 +29,8 @@ def cosine_similarity(v1, v2):
         return sum_xy / denominator
 
 def compare_responses(response1, response2, question_distribution):
+    # Note that we construct question_distribution from the frequency of
+    # responses in testdata.json (some time constraints)
     total_same = 0
     weighted_score = 0.0
     for i in range(len(response1)):
@@ -75,6 +77,8 @@ if __name__ == '__main__':
         sys.exit(0)
 
     users = []
+    question_distribution = []  # Placeholder for the question distribution data
+
     with open(INPUT_FILE) as json_file:
         data = json.load(json_file)
         for user_obj in data['users']:
@@ -83,9 +87,16 @@ if __name__ == '__main__':
                             user_obj['responses'])
             users.append(new_user)
 
+        if 'question_distribution' in data:
+            question_distribution = data['question_distribution']
+        else:
+            print("No question distribution data found in the input file.")
+            sys.exit(1)  # Exit with an error code
+
     for i in range(len(users)-1):
         for j in range(i+1, len(users)):
             user1 = users[i]
             user2 = users[j]
-            score = compute_score(user1, user2)
+            score = compute_score(user1, user2, question_distribution)  # Now passing question_distribution
             print('Compatibility between {} and {}: {}'.format(user1.name, user2.name, score))
+
