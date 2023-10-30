@@ -22,7 +22,7 @@ class User:
 ```
 Note that for  `responses`, each index represents a question and the value stored at that index refers to the answer choice for that question (so in our above case, that person picked `2` for question `2`).
 
-Your task for this assignment will be to implement `compute_score`. `compute_score` takes in two `User` objects and outputs a float denoting their compatibility. One thing to consider is that we want all compatibility scores to be **normalized** across some defined scale (usually this is from `0` to `1`). This helps us better understand the relative differences between two scores (e.g. `6` vs. `7` normalized on `0-10` means something different than `6` vs. `7` normalized on `0-20`.
+Your task for this assignment will be to implement `compute_score`. `compute_score` takes in two `User` objects and outputs a float denoting their compatibility. One thing to consider is that we want all compatibility scores to be **normalized** across some defined scale (usually this is from `0` to `1`). This helps us better understand the relative differences between two scores (e.g. `6` vs. `7` normalized on `0-10` means something different than `6` vs. `7` normalized on `0-20`.)
 
 ## Running Your Code
 ```python3 main.py```
