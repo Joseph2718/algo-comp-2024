@@ -177,13 +177,12 @@ def compute_score(user1, user2, question_distribution):
 
 
 if __name__ == '__main__':
-    # Make sure input file is valid
+    # Make sure input file is valid.
     if not os.path.exists(INPUT_FILE):
         print('Input file not found')
         sys.exit(0)
 
     users = []
-    question_distribution = []  # Placeholder for the question distribution data
 
     with open(INPUT_FILE) as json_file:
         data = json.load(json_file)
@@ -193,16 +192,11 @@ if __name__ == '__main__':
                             user_obj['responses'])
             users.append(new_user)
 
-        if 'question_distribution' in data:
-            question_distribution = data['question_distribution']
-        else:
-            print("No question distribution data found in the input file.")
-            sys.exit(1)  # Exit with an error code
-
     for i in range(len(users)-1):
         for j in range(i+1, len(users)):
             user1 = users[i]
             user2 = users[j]
-            score = compute_score(user1, user2, question_distribution)  # Now passing question_distribution
+            score = compute_score(user1, user2, question_distribution)  # Using the pre-computed question_distribution.
             print('Compatibility between {} and {}: {}'.format(user1.name, user2.name, score))
+
 
